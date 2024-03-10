@@ -1,7 +1,10 @@
 <?php
+// Establish database connection
 $conn = new mysqli("localhost", "root", "", "assignment2");
 
+// Check request method
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Retrieve all products
     $result = $conn->query("SELECT * FROM Product");
     $products = array();
     while ($row = $result->fetch_assoc()) {
@@ -9,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
     echo json_encode($products);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Handle POST request to insert new product
     $data = json_decode(file_get_contents("php://input"), true);
     $description = $data['description'];
     $image = $data['image'];
@@ -22,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    // Handle PUT request to update product
     parse_str(file_get_contents("php://input"), $data);
     $id = $data['id'];
     $description = $data['description'];
@@ -36,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Handle DELETE request to delete product
     parse_str(file_get_contents("php://input"), $data);
     $id = $data['id'];
     
@@ -47,5 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 }
 
+// Close connection
 $conn->close();
 ?>

@@ -1,20 +1,27 @@
 <?php
+// Establish database connection
 $conn = new mysqli("localhost", "root", "", "assignment2");
 
+// Check request method
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Handle GET request to retrieve all comments
     $result = $conn->query("SELECT * FROM Comments");
     $comments = array();
     while ($row = $result->fetch_assoc()) {
         $comments[] = $row;
     }
-    echo json_encode($comments);
+    echo json_encode($comments); // Return comments data as JSON
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
+    // Handle POST request to add a new comment
+    $data = json_decode(file_get_contents("php://input"), true); // Decode JSON data from the request body
+    // Extract comment data from the request
     $product_id = $data['product_id'];
     $user_id = $data['user_id'];
     $rating = $data['rating'];
     $image = $data['image'];
     $text = $data['text'];
+    
+    // Insert the new comment into the database
     $sql = "INSERT INTO Comments (product_id, user_id, rating, image, text) VALUES ('$product_id', '$user_id', '$rating', '$image', '$text')";
     if ($conn->query($sql) === TRUE) {
         echo "New comment added successfully";
@@ -22,11 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    parse_str(file_get_contents("php://input"), $data);
+    // Handle PUT request to update an existing comment
+    parse_str(file_get_contents("php://input"), $data); // Parse PUT request data
+    // Extract comment data from the request
     $id = $data['id'];
     $rating = $data['rating'];
     $text = $data['text'];
     
+    // Update the comment in the database
     $sql = "UPDATE Comments SET rating='$rating', text='$text' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "Comment updated successfully";
@@ -34,9 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    parse_str(file_get_contents("php://input"), $data);
-    $id = $data['id'];
+    // Handle DELETE request to delete a comment
+    parse_str(file_get_contents("php://input"), $data); // Parse DELETE request data
+    $id = $data['id']; // Extract comment ID from the request
     
+    // Delete the comment from the database
     $sql = "DELETE FROM Comments WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "Comment deleted successfully";
@@ -45,5 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 }
 
+// Close connection
 $conn->close();
 ?>

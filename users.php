@@ -1,21 +1,27 @@
 <?php
+// Establish database connection
 $conn = new mysqli("localhost", "root", "", "assignment2");
 
+// Check request method
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Handle GET request to retrieve all users
     $result = $conn->query("SELECT * FROM User");
     $users = array();
     while ($row = $result->fetch_assoc()) {
         $users[] = $row;
     }
-    echo json_encode($users);
+    echo json_encode($users); // Return users data as JSON
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
+    // Handle POST request to create a new user
+    $data = json_decode(file_get_contents("php://input"), true); // Decode JSON data from the request body
+    // Extract user data from the request
     $email = $data['email'];
     $password = $data['password'];
     $username = $data['username'];
     $purchase_history = $data['purchase_history'];
     $shipping_address = $data['shipping_address'];
     
+    // Insert the new user into the database
     $sql = "INSERT INTO User (email, password, username, purchase_history, shipping_address) VALUES ('$email', '$password', '$username', '$purchase_history', '$shipping_address')";
     if ($conn->query($sql) === TRUE) {
         echo "New user added successfully";
@@ -23,7 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    parse_str(file_get_contents("php://input"), $data);
+    // Handle PUT request to update an existing user
+    parse_str(file_get_contents("php://input"), $data); // Parse PUT request data
+    // Extract user data from the request
     $id = $data['id'];
     $email = $data['email'];
     $password = $data['password'];
@@ -31,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $purchase_history = $data['purchase_history'];
     $shipping_address = $data['shipping_address'];
     
+    // Update the user in the database
     $sql = "UPDATE User SET email='$email', password='$password', username='$username', purchase_history='$purchase_history', shipping_address='$shipping_address' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "User updated successfully";
@@ -38,9 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    parse_str(file_get_contents("php://input"), $data);
-    $id = $data['id'];
+    // Handle DELETE request to delete a user
+    parse_str(file_get_contents("php://input"), $data); // Parse DELETE request data
+    $id = $data['id']; // Extract user ID from the request
     
+    // Delete the user from the database
     $sql = "DELETE FROM User WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "User deleted successfully";
@@ -49,5 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 }
 
+// Close connection
 $conn->close();
 ?>
