@@ -8,6 +8,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $users[] = $row;
     }
     echo json_encode($users);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $email = $data['email'];
+    $password = $data['password'];
+    $username = $data['username'];
+    $purchase_history = $data['purchase_history'];
+    $shipping_address = $data['shipping_address'];
+    
+    $sql = "INSERT INTO User (email, password, username, purchase_history, shipping_address) VALUES ('$email', '$password', '$username', '$purchase_history', '$shipping_address')";
+    if ($conn->query($sql) === TRUE) {
+        echo "New user added successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
 
 $conn->close();
