@@ -20,6 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    parse_str(file_get_contents("php://input"), $data);
+    $id = $data['id'];
+    $quantity = $data['quantity'];
+    
+    $sql = "UPDATE Cart SET quantity='$quantity' WHERE id='$id'";
+    if ($conn->query($sql) === TRUE) {
+        echo "Cart item updated successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
 
 $conn->close();

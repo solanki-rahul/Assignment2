@@ -21,6 +21,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    parse_str(file_get_contents("php://input"), $data);
+    $id = $data['id'];
+    $description = $data['description'];
+    $image = $data['image'];
+    $pricing = $data['pricing'];
+    $shipping_cost = $data['shipping_cost'];
+    
+    $sql = "UPDATE Product SET description='$description', image='$image', pricing='$pricing', shipping_cost='$shipping_cost' WHERE id='$id'";
+    if ($conn->query($sql) === TRUE) {
+        echo "Product updated successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
 
 $conn->close();

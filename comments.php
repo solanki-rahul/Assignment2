@@ -21,6 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    parse_str(file_get_contents("php://input"), $data);
+    $id = $data['id'];
+    $rating = $data['rating'];
+    $text = $data['text'];
+    
+    $sql = "UPDATE Comments SET rating='$rating', text='$text' WHERE id='$id'";
+    if ($conn->query($sql) === TRUE) {
+        echo "Comment updated successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
 
 $conn->close();
