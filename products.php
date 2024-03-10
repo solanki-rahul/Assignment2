@@ -35,6 +35,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    parse_str(file_get_contents("php://input"), $data);
+    $id = $data['id'];
+    
+    $sql = "DELETE FROM Product WHERE id='$id'";
+    if ($conn->query($sql) === TRUE) {
+        echo "Product deleted successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
 
 $conn->close();
