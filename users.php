@@ -14,12 +14,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle POST request to create a new user
     $data = json_decode(file_get_contents("php://input"), true); // Decode JSON data from the request body
-    // Extract user data from the request
-    $email = $data['email'];
-    $password = $data['password'];
-    $username = $data['username'];
-    $purchase_history = $data['purchase_history'];
-    $shipping_address = $data['shipping_address'];
+    // Extract user data from the request and sanitize
+    $email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
+    $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
+    $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
+    $purchase_history = filter_var($data['purchase_history'], FILTER_SANITIZE_STRING);
+    $shipping_address = filter_var($data['shipping_address'], FILTER_SANITIZE_STRING);
+    
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Invalid email format";
+        exit();
+    }
     
     // Insert the new user into the database
     $sql = "INSERT INTO User (email, password, username, purchase_history, shipping_address) VALUES ('$email', '$password', '$username', '$purchase_history', '$shipping_address')";
@@ -31,13 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     // Handle PUT request to update an existing user
     parse_str(file_get_contents("php://input"), $data); // Parse PUT request data
-    // Extract user data from the request
+    // Extract user data from the request and sanitize
     $id = $data['id'];
-    $email = $data['email'];
-    $password = $data['password'];
-    $username = $data['username'];
-    $purchase_history = $data['purchase_history'];
-    $shipping_address = $data['shipping_address'];
+    $email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
+    $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
+    $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
+    $purchase_history = filter_var($data['purchase_history'], FILTER_SANITIZE_STRING);
+    $shipping_address = filter_var($data['shipping_address'], FILTER_SANITIZE_STRING);
+    
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Invalid email format";
+        exit();
+    }
     
     // Update the user in the database
     $sql = "UPDATE User SET email='$email', password='$password', username='$username', purchase_history='$purchase_history', shipping_address='$shipping_address' WHERE id='$id'";
