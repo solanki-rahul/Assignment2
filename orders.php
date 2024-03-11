@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     // Handle PUT request to update an existing order
-    parse_str(file_get_contents("php://input"), $data); // Parse PUT request data
+    $data = json_decode(file_get_contents("php://input"), true); // Parse PUT request data
     
     // Extract order data from the request
     $id = mysqli_real_escape_string($conn, $data['id']);
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     // Handle DELETE request to cancel or delete an order
-    parse_str(file_get_contents("php://input"), $data); // Parse DELETE request data
+    $data = json_decode(file_get_contents("php://input"), true); // Parse DELETE request data
     $id = mysqli_real_escape_string($conn, $data['id']); // Extract order ID from the request
     
     // Validate input data

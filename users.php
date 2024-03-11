@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     // Handle PUT request to update an existing user
-    parse_str(file_get_contents("php://input"), $data); // Parse PUT request data
+    $data = json_decode(file_get_contents("php://input"), true); // Parse PUT request data
     // Extract user data from the request and sanitize
     $id = $data['id'];
     $email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     // Handle DELETE request to delete a user
-    parse_str(file_get_contents("php://input"), $data); // Parse DELETE request data
+    $data = json_decode(file_get_contents("php://input"), true); // Parse DELETE request data
     $id = $data['id']; // Extract user ID from the request
     
     // Delete the user from the database

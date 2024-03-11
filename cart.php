@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     // Handle PUT request to update an existing item in the cart
-    parse_str(file_get_contents("php://input"), $data); // Parse PUT request data
+    $data = json_decode(file_get_contents("php://input"), true); // Parse PUT request data
     // Extract cart item data from the request and sanitize
     $id = sanitizeInput($data['id']);
     $quantity = sanitizeInput($data['quantity']);
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     // Handle DELETE request to remove an item from the cart
-    parse_str(file_get_contents("php://input"), $data); // Parse DELETE request data
+    $data = json_decode(file_get_contents("php://input"), true); // Parse DELETE request data
     // Extract cart item ID from the request and sanitize
     $id = sanitizeInput($data['id']);
     

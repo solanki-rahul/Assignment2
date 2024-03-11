@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     // Handle PUT request (update product)
-    parse_str(file_get_contents("php://input"), $data);
+    $data = json_decode(file_get_contents("php://input"), true);
     // Validate incoming data
     if (!isset($data['id']) || !isset($data['description']) || !isset($data['image']) || !isset($data['pricing']) || !isset($data['shipping_cost'])) {
         echo "Error: Incomplete data provided";
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     // Handle DELETE request (delete product)
-    parse_str(file_get_contents("php://input"), $data);
+    $data = json_decode(file_get_contents("php://input"), true);
     // Validate incoming data
     if (!isset($data['id'])) {
         echo "Error: Incomplete data provided";
