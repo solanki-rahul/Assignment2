@@ -17,19 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
     // Extract order data from the request
     $user_id = mysqli_real_escape_string($conn, $data['user_id']);
-    $product_id = mysqli_real_escape_string($conn, $data['product_id']);
-    $quantity = mysqli_real_escape_string($conn, $data['quantity']);
-    $total_price = mysqli_real_escape_string($conn, $data['total_price']);
-    $shipping_address = mysqli_real_escape_string($conn, $data['shipping_address']);
+    $total_amount = mysqli_real_escape_string($conn, $data['total_amount']);
     
     // Validate input data
-    if (empty($user_id) || empty($product_id) || empty($quantity) || empty($total_price) || empty($shipping_address)) {
+    if (empty($user_id) || empty($total_amount)) {
         echo "Error: Missing required fields";
-    } elseif (!is_numeric($user_id) || !is_numeric($product_id) || !is_numeric($quantity) || !is_numeric($total_price)) {
+    } elseif (!is_numeric($user_id)) {
         echo "Error: Invalid data format";
     } else {
         // Insert the new order into the database
-        $sql = "INSERT INTO Orders (user_id, product_id, quantity, total_price, shipping_address) VALUES ('$user_id', '$product_id', '$quantity', '$total_price', '$shipping_address')";
+        $sql = "INSERT INTO Orders (user_id, total_amount) VALUES ('$user_id', '$total_amount')";
         if ($conn->query($sql) === TRUE) {
             echo "New order created successfully";
         } else {
@@ -42,16 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
     // Extract order data from the request
     $id = mysqli_real_escape_string($conn, $data['id']);
-    $quantity = mysqli_real_escape_string($conn, $data['quantity']);
-    $total_price = mysqli_real_escape_string($conn, $data['total_price']);
-    $shipping_address = mysqli_real_escape_string($conn, $data['shipping_address']);
+    $total_amount = mysqli_real_escape_string($conn, $data['total_amount']);
     
     // Validate input data
-    if (empty($id) || empty($quantity) || empty($total_price) || empty($shipping_address) || !is_numeric($id) || !is_numeric($quantity) || !is_numeric($total_price)) {
+    if (empty($id) || empty($total_amount)|| !is_numeric($id) || !is_numeric($total_amount)) {
         echo "Error: Invalid or missing data";
     } else {
         // Update the order in the database
-        $sql = "UPDATE Orders SET quantity='$quantity', total_price='$total_price', shipping_address='$shipping_address' WHERE id='$id'";
+        $sql = "UPDATE Orders SET  total_amount='$total_amount' WHERE id='$id'";
         if ($conn->query($sql) === TRUE) {
             echo "Order updated successfully";
         } else {
